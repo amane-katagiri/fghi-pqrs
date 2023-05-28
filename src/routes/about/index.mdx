@@ -1,0 +1,20 @@
+# FGHI PQRS について
+
+[FGHI PQRS](https://github.com/amane-katagiri/fghi-pqrs)は、[個人サイトとフィードのつかいかた](https://ama.ne.jp/post/feed-and-you/)という記事のために書かれた Atom フィードジェネレーターの小さなサンプルです。
+
+[Qwik](https://qwik.builder.io/)で書かれ、[Cloudflare Pages](https://pages.cloudflare.com/)で配信されています。その他、[Tailwind CSS](https://tailwindcss.com/)や[Modular Forms](https://modularforms.dev/)を組み合わせてデザインやフォームが実装されています。
+
+FGHI PQRS では、フィード出力機能を持たない個人サイトからでも、サイト情報と記事の更新情報を入力することで有効な Atom フィードを生成できます。現在以下の機能が実装されています。
+
+- ウィザード形式を用いたサイト情報の入力
+- シンプルでカラフルなカード UI による更新情報の登録
+- Atom 配信フォーマットを完全に満たす最低限のフィード出力
+
+以下の機能はまだ実装されていません。
+
+- URL を入力した際にサイトや記事のタイトルを取得する機能
+- 完成したフィードをサービス内で直接ホスティングする機能
+- 他のフォーマットによるフィード出力
+- JavaScript が無効な環境への対応
+
+フィードがない個人サイトを運用していて、どうにかフィードを配信したいと思っている方は、ぜひ使ってみてください。機能が足りないと感じたら、いつでもフォークしてリッチなアプリに修正できます。
