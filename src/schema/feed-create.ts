@@ -7,7 +7,7 @@ export const feedCreateRequestBodySchema = z.object({
   feedTitle: z.string().nonempty({ message: "必須です" }),
   feedAlterUrl: z
     .string()
-    .refine(urlValidator(), { message: "URLを入力してください" }),
+    .refine(requiredUrlValidator, { message: "URLを入力してください" }),
   feedSelfUrl: z
     .string()
     .refine(urlValidator(), { message: "URLを入力してください" }),

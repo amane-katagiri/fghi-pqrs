@@ -5,7 +5,7 @@ export const buildFeedXml = (params: FeedCreateRequestBody): string => {
   const feedAlterUrl = params.feedAlterUrl !== "" ? params.feedAlterUrl : null;
   const feedSelfUrl = params.feedSelfUrl !== "" ? params.feedSelfUrl : null;
   const { hostname, pathname } = new URL(
-    feedAlterUrl ?? `https://${crypto.randomUUID()}.example.com/feed`
+    feedAlterUrl ?? `https://${crypto.randomUUID()}.example.com/`
   );
   const feedId = `tag:${hostname},${params.feedCreated.padStart(
     4,
