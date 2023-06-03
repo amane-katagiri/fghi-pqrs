@@ -7,7 +7,7 @@ export default component$<{
   return (
     <>
       <div class="flex items-center">{description}</div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <Slot />
       </div>
       <div class="col-start-2 text-error text-sm min-h-[1.5rem]">
