@@ -1,5 +1,5 @@
-import { component$, useComputed$ } from "@builder.io/qwik";
 import type { QwikIntrinsicElements } from "@builder.io/qwik";
+import { component$, useComputed$ } from "@builder.io/qwik";
 
 export default component$<
   Omit<QwikIntrinsicElements["input"], "value"> & { value?: string }

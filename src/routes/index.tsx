@@ -1,5 +1,3 @@
-import { routeLoader$, useNavigate } from "@builder.io/qwik-city";
-import type { DocumentHead } from "@builder.io/qwik-city";
 import {
   $,
   Fragment,
@@ -7,23 +5,31 @@ import {
   useSignal,
   useVisibleTask$,
 } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
+import { routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import type { FormStore, InitialValues } from "@modular-forms/qwik";
-import { focus } from "@modular-forms/qwik";
-import { useForm, validate, zodForm$ } from "@modular-forms/qwik";
 import {
-  HiCheckSolid,
+  focus,
+  getError,
+  getValue,
+  useForm,
+  validate,
+  zodForm$,
+} from "@modular-forms/qwik";
+import {
   HiArrowSmallRightSolid,
   HiArrowUturnLeftSolid,
+  HiCheckSolid,
 } from "@qwikest/icons/heroicons";
 
-import type { WizardForm } from "~/schema/wizard";
-import { wizardFormSchema } from "~/schema/wizard";
+import { match } from "ts-pattern";
 import FeedAlterUrlField from "~/components/wizard/wizard-step/feed-alter-url";
-import FeedSelfUrlField from "~/components/wizard/wizard-step/feed-self-url";
-import FeedTitleField from "~/components/wizard/wizard-step/feed-title";
 import FeedAuthorField from "~/components/wizard/wizard-step/feed-author";
 import FeedCreatedField from "~/components/wizard/wizard-step/feed-created";
-import { match } from "ts-pattern";
+import FeedSelfUrlField from "~/components/wizard/wizard-step/feed-self-url";
+import FeedTitleField from "~/components/wizard/wizard-step/feed-title";
+import type { WizardForm } from "~/schema/wizard";
+import { wizardFormSchema } from "~/schema/wizard";
 
 export const useRouteLoader = routeLoader$<InitialValues<WizardForm>>(
   (requestEvent) => {
@@ -39,29 +45,26 @@ export const useRouteLoader = routeLoader$<InitialValues<WizardForm>>(
   }
 );
 
-const getStateParams = (
-  values: FormStore<WizardForm, undefined>,
-  step: number
-) =>
+const getStateParams = (form: FormStore<WizardForm, undefined>, step: number) =>
   new URLSearchParams(
     [
       ["step", step],
-      ["feed-alter-url", values.internal.fields.feedAlterUrl?.value],
-      ["feed-self-url", values.internal.fields.feedSelfUrl?.value],
-      ["feed-title", values.internal.fields.feedTitle?.value],
-      ["feed-author", values.internal.fields.feedAuthor?.value],
-      ["feed-created", values.internal.fields.feedCreated?.value],
+      ["feed-alter-url", getValue(form, "feedAlterUrl") ?? ""],
+      ["feed-self-url", getValue(form, "feedSelfUrl") ?? ""],
+      ["feed-title", getValue(form, "feedTitle") ?? ""],
+      ["feed-author", getValue(form, "feedAuthor") ?? ""],
+      ["feed-created", getValue(form, "feedCreated") ?? ""],
     ].filter<string[]>((p): p is string[] => p[1] != null)
   );
 
-const getFeedUrl = (values: FormStore<WizardForm, undefined>) =>
+const getFeedUrl = (form: FormStore<WizardForm, undefined>) =>
   `/feed?${new URLSearchParams(
     [
-      ["feed-alter-url", values.internal.fields.feedAlterUrl?.value],
-      ["feed-self-url", values.internal.fields.feedSelfUrl?.value],
-      ["feed-title", values.internal.fields.feedTitle?.value],
-      ["feed-author", values.internal.fields.feedAuthor?.value],
-      ["feed-created", values.internal.fields.feedCreated?.value],
+      ["feed-alter-url", getValue(form, "feedAlterUrl") ?? ""],
+      ["feed-self-url", getValue(form, "feedSelfUrl") ?? ""],
+      ["feed-title", getValue(form, "feedTitle") ?? ""],
+      ["feed-author", getValue(form, "feedAuthor") ?? ""],
+      ["feed-created", getValue(form, "feedCreated") ?? ""],
     ].filter<string[]>((p): p is string[] => p[1] != null)
   )}`;
 
@@ -112,7 +115,9 @@ export default component$(() => {
     revalidateOn: "touched",
   });
 
-  const stepCount = useSignal(wizardForm.internal.fields.step?.value ?? 0);
+  const stepCount = useSignal(
+    getValue(wizardForm, "step", { shouldActive: false }) ?? 0
+  );
 
   const navigate = useNavigate();
   const updateUrlParams = $(() =>
@@ -155,7 +160,7 @@ export default component$(() => {
                       form={wizardForm}
                       field={field}
                       props={props}
-                      siteUrl={wizardForm.internal.fields.feedAlterUrl?.value}
+                      siteUrl={getValue(wizardForm, "feedAlterUrl")}
                     />
                   )}
                 </Field>
@@ -212,15 +217,13 @@ export default component$(() => {
                         }}
                       >
                         <StepButton
-                          error={!!wizardForm.internal.fields[key]?.error}
+                          error={!!getError(wizardForm, key)}
                           current={stepCount.value === i}
                         />
                       </button>
                       <div
                         class={`whitespace-nowrap font-bold${
-                          wizardForm.internal.fields[key]?.error
-                            ? " text-error"
-                            : ""
+                          getError(wizardForm, key) ? " text-error" : ""
                         }`}
                       >
                         {WIZARD_STEP_LABEL[key]}
@@ -228,13 +231,11 @@ export default component$(() => {
                     </div>
                     <div
                       class={`overflow-ellipsis overflow-hidden whitespace-nowrap${
-                        wizardForm.internal.fields[key]?.error
-                          ? " text-error"
-                          : ""
+                        getError(wizardForm, key) ? " text-error" : ""
                       }`}
                     >
-                      {wizardForm.internal.fields[key]?.value
-                        ? wizardForm.internal.fields[key]?.value
+                      {getValue(wizardForm, key)
+                        ? getValue(wizardForm, key)
                         : "（設定なし）"}
                     </div>
                   </Fragment>

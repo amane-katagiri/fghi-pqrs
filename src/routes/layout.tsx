@@ -2,8 +2,8 @@ import { component$, Slot } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 
-import Header from "~/components/header/header";
 import Footer from "~/components/footer/footer";
+import Header from "~/components/header/header";
 
 export const useServerVersion = routeLoader$(() => {
   return import.meta.env.PUBLIC_APP_VERSION;

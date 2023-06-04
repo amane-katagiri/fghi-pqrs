@@ -1,8 +1,8 @@
+import type { QwikChangeEvent, QwikIntrinsicElements } from "@builder.io/qwik";
 import { component$, useSignal } from "@builder.io/qwik";
-import type { QwikIntrinsicElements, QwikChangeEvent } from "@builder.io/qwik";
+import type { FieldElement, Maybe } from "@modular-forms/qwik";
 import DateInput from "./date";
 import TimeInput from "./time";
-import type { FieldElement, Maybe } from "@modular-forms/qwik";
 
 const extractDate = (value?: string) => {
   try {
@@ -35,10 +35,13 @@ const extractTime = (value?: string) => {
 };
 
 export default component$<
-  QwikIntrinsicElements["input"] & { field: { value: Maybe<string> } }
+  QwikIntrinsicElements["input"] & {
+    field: { value: Maybe<string> };
+    setValue: (value?: string) => void;
+  }
 >(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ({ value, field, children, ...props }) => {
+  ({ value, field, setValue, children, ...props }) => {
     const dateValue = useSignal<string>(extractDate(field.value) ?? "");
     const timeValue = useSignal<string>(extractTime(field.value) ?? "");
     const timezoneOffset = new Date().getTimezoneOffset();
@@ -55,14 +58,14 @@ export default component$<
         <DateInput
           onChange$={(e: QwikChangeEvent<FieldElement>) => {
             dateValue.value = e.target?.value ?? "";
-            field.value = `${dateValue.value}T${timeValue.value}:00${tz}`;
+            setValue(`${dateValue.value}T${timeValue.value}:00${tz}`);
           }}
           value={dateValue.value}
         />
         <TimeInput
           onChange$={(e: QwikChangeEvent<FieldElement>) => {
             timeValue.value = e.target?.value ?? "";
-            field.value = `${dateValue.value}T${timeValue.value}:00${tz}`;
+            setValue(`${dateValue.value}T${timeValue.value}:00${tz}`);
           }}
           value={timeValue.value}
         />

@@ -27,15 +27,15 @@ export default component$<{
   meta: "title" | "summary";
   field: Field;
   url?: string;
-  afterFetch: () => Promise<void>;
-}>(({ meta, field, url, afterFetch }) => {
-  const fetchLoading = useSignal<boolean>(false);
+  setValue: (value?: string) => void;
+}>(({ meta, field, url, setValue }) => {
+  const isLoading = useSignal<boolean>(false);
   return (
     <button
       type="button"
-      disabled={fetchLoading.value || url == null || url === ""}
+      disabled={isLoading.value || url == null || url === ""}
       class={`flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-full border ${
-        fetchLoading.value || url == null || url === ""
+        isLoading.value || url == null || url === ""
           ? "border-disabled-text text-disabled-text"
           : "border-primary text-primary hover:border-primary-hover hover:text-primary-hover"
       }`}
@@ -44,7 +44,7 @@ export default component$<{
           if (!url) {
             return;
           }
-          fetchLoading.value = true;
+          isLoading.value = true;
           const response = await fetch(
             `/api/pagemeta?${new URLSearchParams([["url", url]]).toString()}`
           );
@@ -57,15 +57,12 @@ export default component$<{
               .filter((item) => item != null)
               .join(" ");
           }
-          const before = field.value;
-          field.value = "";
-          field.value = json[meta]?.value ?? before;
+          setValue(json[meta]?.value ?? String(field.value ?? ""));
         } catch (e) {
           alert(String(e));
         } finally {
-          fetchLoading.value = false;
+          isLoading.value = false;
         }
-        await afterFetch();
       }}
     >
       <HiArrowDownTraySolid class="w-5 h-5" />

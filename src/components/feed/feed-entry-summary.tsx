@@ -4,7 +4,7 @@ import type {
   FieldStore,
   FormStore,
 } from "@modular-forms/qwik";
-import { validate } from "@modular-forms/qwik";
+import { focus, setValue } from "@modular-forms/qwik";
 import Textbox from "../form/textbox";
 import ItemRow from "./item-row";
 import type { FeedCreateRequestBody } from "~/schema/feed-create";
@@ -29,8 +29,9 @@ export default component$<{
           field={field}
           url={entryUrl}
           meta="summary"
-          afterFetch={$(async () => {
-            await validate(form, field.name);
+          setValue={$((value?: string) => {
+            setValue(form, field.name, value ?? "");
+            focus(form, field.name);
           })}
         />
       </div>

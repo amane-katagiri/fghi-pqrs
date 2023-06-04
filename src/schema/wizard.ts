@@ -1,5 +1,5 @@
-import { urlValidator } from "./common";
 import { z } from "zod";
+import { urlValidator } from "./common";
 
 export const wizardFormSchema = z.object({
   step: z.number().optional(),

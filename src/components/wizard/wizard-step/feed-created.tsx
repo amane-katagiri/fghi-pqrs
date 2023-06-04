@@ -1,8 +1,8 @@
 import { component$ } from "@builder.io/qwik";
 import type { FieldElementProps, FieldStore } from "@modular-forms/qwik";
 import type { WizardForm } from "~/schema/wizard";
-import StepPanel from "./step-panel";
 import Textbox from "../../form/textbox";
+import StepPanel from "./step-panel";
 
 export default component$<{
   field: FieldStore<WizardForm, "feedCreated">;

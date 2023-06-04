@@ -10,33 +10,34 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import type { InitialValues } from "@modular-forms/qwik";
 import {
+  formAction$,
   getValue,
   insert,
   remove,
-  formAction$,
+  setValue,
   useForm,
   zodForm$,
 } from "@modular-forms/qwik";
 import {
-  HiPlusSolid,
   HiCodeBracketSolid,
   HiPencilSolid,
+  HiPlusSolid,
   HiTrashOutline,
 } from "@qwikest/icons/heroicons";
-import type { FeedCreateRequestBody } from "~/schema/feed-create";
-import { feedCreateRequestBodySchema } from "~/schema/feed-create";
-import { buildFeedXml } from "~/feed/builder";
-import FeedTitleRow from "~/components/feed/feed-title";
 import FeedAlterUrlRow from "~/components/feed/feed-alter-url";
-import FeedSelfUrlRow from "~/components/feed/feed-self-url";
 import FeedAuthorRow from "~/components/feed/feed-author";
 import FeedCreatedRow from "~/components/feed/feed-created";
-import FeedEntryUrlRow from "~/components/feed/feed-entry-url";
-import FeedEntryTitleRow from "~/components/feed/feed-entry-title";
-import FeedEntryCreatedRow from "~/components/feed/feed-entry-created";
-import FeedEntryUpdatedRow from "~/components/feed/feed-entry-updated";
 import FeedEntryAuthorRow from "~/components/feed/feed-entry-author";
+import FeedEntryCreatedRow from "~/components/feed/feed-entry-created";
 import FeedEntrySummaryRow from "~/components/feed/feed-entry-summary";
+import FeedEntryTitleRow from "~/components/feed/feed-entry-title";
+import FeedEntryUpdatedRow from "~/components/feed/feed-entry-updated";
+import FeedEntryUrlRow from "~/components/feed/feed-entry-url";
+import FeedSelfUrlRow from "~/components/feed/feed-self-url";
+import FeedTitleRow from "~/components/feed/feed-title";
+import { buildFeedXml } from "~/feed/builder";
+import type { FeedCreateRequestBody } from "~/schema/feed-create";
+import { feedCreateRequestBodySchema } from "~/schema/feed-create";
 
 export const useRouteLoader = routeLoader$<
   InitialValues<FeedCreateRequestBody>
@@ -84,11 +85,11 @@ export default component$(() => {
     navigate(
       `?${new URLSearchParams(
         [
-          ["feed-title", feedForm.internal.fields.feedTitle?.value],
-          ["feed-alter-url", feedForm.internal.fields.feedAlterUrl?.value],
-          ["feed-self-url", feedForm.internal.fields.feedSelfUrl?.value],
-          ["feed-created", feedForm.internal.fields.feedCreated?.value],
-          ["feed-author", feedForm.internal.fields.feedAuthor?.value],
+          ["feed-alter-url", getValue(feedForm, "feedAlterUrl") ?? ""],
+          ["feed-self-url", getValue(feedForm, "feedSelfUrl") ?? ""],
+          ["feed-title", getValue(feedForm, "feedTitle") ?? ""],
+          ["feed-author", getValue(feedForm, "feedAuthor") ?? ""],
+          ["feed-created", getValue(feedForm, "feedCreated") ?? ""],
         ].filter<string[]>((p): p is string[] => p[1] != null)
       )}`
     )
@@ -129,10 +130,8 @@ export default component$(() => {
             </div>
             <div class="flex flex-col gap-2 mt-4">
               <div class="font-bold">
-                {feedForm.internal.fields.feedSelfUrl?.value ? (
-                  <code class="px-1">
-                    {feedForm.internal.fields.feedSelfUrl?.value}
-                  </code>
+                {getValue(feedForm, "feedSelfUrl") ? (
+                  <code class="px-1">{getValue(feedForm, "feedSelfUrl")}</code>
                 ) : (
                   "フィードの場所"
                 )}
@@ -140,12 +139,12 @@ export default component$(() => {
               </div>
               <ResultTextarea value={feedForm.response.message ?? ""} />
             </div>
-            {feedForm.internal.fields.feedSelfUrl?.value && (
+            {getValue(feedForm, "feedSelfUrl") && (
               <div class="flex flex-col gap-2 mt-4">
                 <div class="font-bold">
-                  {feedForm.internal.fields.feedAlterUrl?.value ? (
+                  {getValue(feedForm, "feedAlterUrl") ? (
                     <code class="px-1">
-                      {feedForm.internal.fields.feedAlterUrl?.value}
+                      {getValue(feedForm, "feedAlterUrl")}
                     </code>
                   ) : (
                     "サイト"
@@ -157,13 +156,12 @@ export default component$(() => {
                 <ResultTextarea
                   value={(() => {
                     const link = document.createElement("link");
-                    link.href =
-                      feedForm.internal.fields.feedSelfUrl?.value ?? "";
+                    link.href = getValue(feedForm, "feedSelfUrl") ?? "";
                     link.type = "application/atom+xml";
                     link.rel = "alternate";
                     link.title = `${
-                      feedForm.internal.fields.feedTitle?.value
-                        ? feedForm.internal.fields.feedTitle?.value
+                      getValue(feedForm, "feedTitle")
+                        ? getValue(feedForm, "feedTitle")
                         : "サイトタイトル"
                     } Atom Feed`;
                     return link.outerHTML;
@@ -187,7 +185,7 @@ export default component$(() => {
                   form={feedForm}
                   field={field}
                   props={props}
-                  siteUrl={feedForm.internal.fields.feedAlterUrl?.value}
+                  siteUrl={getValue(feedForm, "feedAlterUrl")}
                 />
               )}
             </Field>
@@ -222,8 +220,7 @@ export default component$(() => {
                     }T00:00:00Z`,
                     updated: new Date().toISOString(),
                     url: "",
-                    authorName:
-                      feedForm.internal.fields.feedAuthor?.value ?? "",
+                    authorName: getValue(feedForm, "feedAuthor") ?? "",
                     summary: "",
                   },
                 });
@@ -295,6 +292,13 @@ export default component$(() => {
                               {(field, props) => (
                                 <FeedEntryCreatedRow
                                   field={field}
+                                  setValue={$((value?: string) =>
+                                    setValue(
+                                      feedForm,
+                                      `entry.${i}.created`,
+                                      value ?? ""
+                                    )
+                                  )}
                                   props={props}
                                 />
                               )}
@@ -303,6 +307,13 @@ export default component$(() => {
                               {(field, props) => (
                                 <FeedEntryUpdatedRow
                                   field={field}
+                                  setValue={$((value?: string) =>
+                                    setValue(
+                                      feedForm,
+                                      `entry.${i}.updated`,
+                                      value ?? ""
+                                    )
+                                  )}
                                   props={props}
                                 />
                               )}

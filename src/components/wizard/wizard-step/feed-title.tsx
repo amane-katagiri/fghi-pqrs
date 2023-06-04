@@ -4,12 +4,12 @@ import type {
   FieldStore,
   FormStore,
 } from "@modular-forms/qwik";
-import { validate } from "@modular-forms/qwik";
+import { focus, setValue } from "@modular-forms/qwik";
 
 import type { WizardForm } from "~/schema/wizard";
-import StepPanel from "./step-panel";
-import Textbox from "../../form/textbox";
 import MetadataButton from "../../form/metadata-button";
+import Textbox from "../../form/textbox";
+import StepPanel from "./step-panel";
 
 export default component$<{
   form: FormStore<WizardForm, undefined>;
@@ -35,8 +35,9 @@ export default component$<{
           field={field}
           url={siteUrl}
           meta="title"
-          afterFetch={$(async () => {
-            await validate(form, field.name);
+          setValue={$((value?: string) => {
+            setValue(form, field.name, value ?? "");
+            focus(form, field.name);
           })}
         />
       </div>

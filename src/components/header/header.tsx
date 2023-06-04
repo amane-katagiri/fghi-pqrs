@@ -1,7 +1,7 @@
 import { $, component$, useSignal } from "@builder.io/qwik";
 import { HiBars3Solid } from "@qwikest/icons/heroicons";
-import { AppLogo } from "../icons/logo";
 import type { HeaderMenuItem } from "~/routes/layout";
+import { AppLogo } from "../icons/logo";
 
 export default component$<{ menuItems: HeaderMenuItem[] }>(({ menuItems }) => {
   const isMenuOpened = useSignal(false);
