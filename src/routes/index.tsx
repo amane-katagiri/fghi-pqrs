@@ -234,8 +234,8 @@ export default component$(() => {
                         getError(wizardForm, key) ? " text-error" : ""
                       }`}
                     >
-                      {getValue(wizardForm, key)
-                        ? getValue(wizardForm, key)
+                      {getValue(wizardForm, key, { shouldActive: false })
+                        ? getValue(wizardForm, key, { shouldActive: false })
                         : "（設定なし）"}
                     </div>
                   </Fragment>
