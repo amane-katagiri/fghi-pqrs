@@ -152,8 +152,10 @@ export default component$(() => {
                   {(field, props) => (
                     <FeedTitleField
                       shown={stepCount.value === 1}
+                      form={wizardForm}
                       field={field}
                       props={props}
+                      siteUrl={wizardForm.internal.fields.feedAlterUrl?.value}
                     />
                   )}
                 </Field>

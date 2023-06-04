@@ -9,8 +9,14 @@ import {
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import type { InitialValues } from "@modular-forms/qwik";
-import { insert, remove } from "@modular-forms/qwik";
-import { formAction$, useForm, zodForm$ } from "@modular-forms/qwik";
+import {
+  getValue,
+  insert,
+  remove,
+  formAction$,
+  useForm,
+  zodForm$,
+} from "@modular-forms/qwik";
 import {
   HiPlusSolid,
   HiCodeBracketSolid,
@@ -176,7 +182,14 @@ export default component$(() => {
           <Title title="サイト・フィードの設定" />
           <div class="grid grid-cols-[auto,1fr] gap-x-2">
             <Field name="feedTitle">
-              {(field, props) => <FeedTitleRow field={field} props={props} />}
+              {(field, props) => (
+                <FeedTitleRow
+                  form={feedForm}
+                  field={field}
+                  props={props}
+                  siteUrl={feedForm.internal.fields.feedAlterUrl?.value}
+                />
+              )}
             </Field>
             <Field name="feedAlterUrl">
               {(field, props) => (
@@ -268,8 +281,13 @@ export default component$(() => {
                             <Field name={`entry.${i}.title`}>
                               {(field, props) => (
                                 <FeedEntryTitleRow
+                                  form={feedForm}
                                   field={field}
                                   props={props}
+                                  entryUrl={getValue(
+                                    feedForm,
+                                    `entry.${i}.url`
+                                  )}
                                 />
                               )}
                             </Field>
@@ -300,15 +318,20 @@ export default component$(() => {
                             <Field name={`entry.${i}.summary`}>
                               {(field, props) => (
                                 <FeedEntrySummaryRow
+                                  form={feedForm}
                                   field={field}
                                   props={props}
+                                  entryUrl={getValue(
+                                    feedForm,
+                                    `entry.${i}.url`
+                                  )}
                                 />
                               )}
                             </Field>
                           </div>
                           <div class="flex justify-end px-4">
                             <button
-                              class="flex-shrink-0 flex items-center border border-primary hover:border-primary-hover justify-center text-primary hover:text-primary-hover w-8 h-8 rounded-full"
+                              class="flex-shrink-0 flex items-center border border-primary hover:border-primary-hover justify-center text-primary hover:text-primary-hover w-9 h-9 rounded-full"
                               type="button"
                               onClick$={() => {
                                 remove(feedForm, "entry", { at: i });
