@@ -67,10 +67,11 @@ export const onGet: RequestHandler = async ({ query, json: _json }) => {
       signal: AbortSignal.timeout(3000),
     });
     if (!response.ok) {
+      const status = response.statusText ?? response.status;
       json(200, {
-        reason: `サイトにアクセスできませんでした（${
-          response.statusText ?? response.status
-        }）`,
+        reason: `サイトにアクセスできませんでした${
+          status ? `（${status}）` : ""
+        }`,
       });
       return;
     }
