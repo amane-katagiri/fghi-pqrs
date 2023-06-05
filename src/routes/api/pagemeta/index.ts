@@ -117,7 +117,6 @@ export const onGet: RequestHandler = async ({ query, json: _json }) => {
       },
     });
   } catch (e) {
-    console.log(e);
     json(200, {
       title: null,
       summary: null,

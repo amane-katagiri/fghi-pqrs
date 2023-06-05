@@ -19,7 +19,6 @@ const extractDate = (value?: string) => {
 };
 const extractTime = (value?: string) => {
   try {
-    console.log(value, "timre");
     return value != null && value !== ""
       ? new Date(
           new Date(`1980-01-01T${value.split("T", 2)[1] ?? value}`).getTime() -
