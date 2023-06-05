@@ -68,7 +68,9 @@ export const onGet: RequestHandler = async ({ query, json: _json }) => {
     });
     if (!response.ok) {
       json(200, {
-        reason: `サイトにアクセスできませんでした（${response.statusText}）`,
+        reason: `サイトにアクセスできませんでした（${
+          response.statusText ?? response.status
+        }）`,
       });
       return;
     }
