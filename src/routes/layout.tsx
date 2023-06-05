@@ -30,7 +30,7 @@ const MENU_ITEMS: HeaderMenuItem[] = [
   { id: "wizard", text: "最初から始める", href: "/" },
   { id: "about", text: "このツールについて", href: "/about" },
   {
-    id: "about",
+    id: "source",
     text: "ソースコード",
     href: "https://github.com/amane-katagiri/fghi-pqrs",
     external: true,
