@@ -1,4 +1,12 @@
-import { component$, Slot } from "@builder.io/qwik";
+import type { Signal } from "@builder.io/qwik";
+import {
+  Slot,
+  component$,
+  createContextId,
+  useContextProvider,
+  useSignal,
+  useTask$,
+} from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 
@@ -8,6 +16,9 @@ import Header from "~/components/header/header";
 export const useServerVersion = routeLoader$(() => {
   return import.meta.env.PUBLIC_APP_VERSION;
 });
+
+export const NotifierContext =
+  createContextId<Signal<string[]>>("notifier-context");
 
 export type HeaderMenuItem = {
   id: string;
@@ -27,6 +38,17 @@ const MENU_ITEMS: HeaderMenuItem[] = [
 ];
 
 export default component$(() => {
+  const notifyQueue = useSignal([]);
+  useContextProvider(NotifierContext, notifyQueue);
+
+  useTask$(({ track, cleanup }) => {
+    track(() => notifyQueue.value);
+    const id = setTimeout(
+      () => (notifyQueue.value = notifyQueue.value.slice(1)),
+      3000
+    );
+    cleanup(() => clearTimeout(id));
+  });
   return (
     <div class="flex flex-col" style="height: 100dvh;">
       <Header menuItems={MENU_ITEMS} />
@@ -34,6 +56,11 @@ export default component$(() => {
         <Slot />
       </main>
       <Footer />
+      {notifyQueue.value[0] && (
+        <div class="w-full fixed flex justify-center px-2 py-4 bottom-0 text-white bg-error animate-slide-in-right">
+          {notifyQueue.value[0]}
+        </div>
+      )}
     </div>
   );
 });

@@ -1,7 +1,8 @@
-import { component$, useSignal } from "@builder.io/qwik";
+import { component$, useContext, useSignal } from "@builder.io/qwik";
 import type { FieldStore } from "@modular-forms/qwik";
 import { HiArrowDownTraySolid } from "@qwikest/icons/heroicons";
 import { pagemetaResponseSchema } from "~/routes/api/pagemeta";
+import { NotifierContext } from "~/routes/layout";
 import type { FeedCreateRequestBody } from "~/schema/feed-create";
 import type { WizardForm } from "~/schema/wizard";
 
@@ -30,6 +31,7 @@ export default component$<{
   setValue: (value?: string) => void;
 }>(({ meta, field, url, setValue }) => {
   const isLoading = useSignal<boolean>(false);
+  const notifyQueue = useContext(NotifierContext);
   return (
     <button
       type="button"
@@ -59,8 +61,7 @@ export default component$<{
           }
           setValue(json[meta]?.value ?? String(field.value ?? ""));
         } catch (e) {
-          alert(String(e));
-          setValue(String(field.value ?? ""));
+          notifyQueue.value = [...notifyQueue.value, String(e)];
         } finally {
           isLoading.value = false;
         }
