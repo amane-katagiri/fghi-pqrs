@@ -288,7 +288,7 @@ export default component$(() => {
                 if (stepCount.value <= WIZARD_MAX_STEP) {
                   updateUrlParams();
                 } else {
-                  navigate(getFeedUrl(wizardForm));
+                  navigate(getFeedUrl(wizardForm), true);
                 }
               }}
               class="flex items-center justify-center bg-primary text-white hover:bg-primary-hover w-12 h-12 rounded-full"
