@@ -37,10 +37,10 @@ export const useRouteLoader = routeLoader$<InitialValues<WizardForm>>(
     return {
       step: Number.isNaN(step) ? 0 : step,
       feedAlterUrl: requestEvent.url.searchParams.get("feed-alter-url") ?? "",
-      feedSelfUrl: requestEvent.url.searchParams.get("feed-self-url") ?? "",
       feedTitle: requestEvent.url.searchParams.get("feed-title") ?? "",
       feedAuthor: requestEvent.url.searchParams.get("feed-author") ?? "",
       feedCreated: requestEvent.url.searchParams.get("feed-created") ?? "",
+      feedSelfUrl: requestEvent.url.searchParams.get("feed-self-url") ?? "",
     };
   }
 );
@@ -50,10 +50,10 @@ const getStateParams = (form: FormStore<WizardForm, undefined>, step: number) =>
     [
       ["step", step],
       ["feed-alter-url", getValue(form, "feedAlterUrl") ?? ""],
-      ["feed-self-url", getValue(form, "feedSelfUrl") ?? ""],
       ["feed-title", getValue(form, "feedTitle") ?? ""],
       ["feed-author", getValue(form, "feedAuthor") ?? ""],
       ["feed-created", getValue(form, "feedCreated") ?? ""],
+      ["feed-self-url", getValue(form, "feedSelfUrl") ?? ""],
     ].filter<string[]>((p): p is string[] => p[1] != null)
   );
 
@@ -61,10 +61,10 @@ const getFeedUrl = (form: FormStore<WizardForm, undefined>) =>
   `/feed?${new URLSearchParams(
     [
       ["feed-alter-url", getValue(form, "feedAlterUrl") ?? ""],
-      ["feed-self-url", getValue(form, "feedSelfUrl") ?? ""],
       ["feed-title", getValue(form, "feedTitle") ?? ""],
       ["feed-author", getValue(form, "feedAuthor") ?? ""],
       ["feed-created", getValue(form, "feedCreated") ?? ""],
+      ["feed-self-url", getValue(form, "feedSelfUrl") ?? ""],
     ].filter<string[]>((p): p is string[] => p[1] != null)
   )}`;
 
@@ -77,10 +77,10 @@ const WIZARD_STEP: readonly (keyof Omit<WizardForm, "step">)[] = [
 ] as const;
 const WIZARD_STEP_LABEL: { [K in (typeof WIZARD_STEP)[number]]: string } = {
   feedAlterUrl: "サイトURL",
-  feedSelfUrl: "フィードURL",
   feedTitle: "サイトタイトル",
   feedAuthor: "サイト作者",
   feedCreated: "フィード作成年",
+  feedSelfUrl: "フィードURL",
 } as const;
 const WIZARD_MAX_STEP = WIZARD_STEP.length;
 

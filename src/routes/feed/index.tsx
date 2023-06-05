@@ -42,11 +42,11 @@ import { feedCreateRequestBodySchema } from "~/schema/feed-create";
 export const useRouteLoader = routeLoader$<
   InitialValues<FeedCreateRequestBody>
 >((requestEvent) => ({
-  feedTitle: requestEvent.url.searchParams.get("feed-title") ?? "",
   feedAlterUrl: requestEvent.url.searchParams.get("feed-alter-url") ?? "",
-  feedSelfUrl: requestEvent.url.searchParams.get("feed-self-url") ?? "",
+  feedTitle: requestEvent.url.searchParams.get("feed-title") ?? "",
   feedAuthor: requestEvent.url.searchParams.get("feed-author") ?? "",
   feedCreated: requestEvent.url.searchParams.get("feed-created") ?? "",
+  feedSelfUrl: requestEvent.url.searchParams.get("feed-self-url") ?? "",
   entry: [],
 }));
 
@@ -86,10 +86,10 @@ export default component$(() => {
       `?${new URLSearchParams(
         [
           ["feed-alter-url", getValue(feedForm, "feedAlterUrl") ?? ""],
-          ["feed-self-url", getValue(feedForm, "feedSelfUrl") ?? ""],
           ["feed-title", getValue(feedForm, "feedTitle") ?? ""],
           ["feed-author", getValue(feedForm, "feedAuthor") ?? ""],
           ["feed-created", getValue(feedForm, "feedCreated") ?? ""],
+          ["feed-self-url", getValue(feedForm, "feedSelfUrl") ?? ""],
         ].filter<string[]>((p): p is string[] => p[1] != null)
       )}`
     )
@@ -179,6 +179,11 @@ export default component$(() => {
         >
           <Title title="サイト・フィードの設定" />
           <div class="grid grid-cols-[auto,1fr] gap-x-2">
+            <Field name="feedAlterUrl">
+              {(field, props) => (
+                <FeedAlterUrlRow field={field} props={props} />
+              )}
+            </Field>
             <Field name="feedTitle">
               {(field, props) => (
                 <FeedTitleRow
@@ -189,19 +194,14 @@ export default component$(() => {
                 />
               )}
             </Field>
-            <Field name="feedAlterUrl">
-              {(field, props) => (
-                <FeedAlterUrlRow field={field} props={props} />
-              )}
-            </Field>
-            <Field name="feedSelfUrl">
-              {(field, props) => <FeedSelfUrlRow field={field} props={props} />}
-            </Field>
             <Field name="feedAuthor">
               {(field, props) => <FeedAuthorRow field={field} props={props} />}
             </Field>
             <Field name="feedCreated">
               {(field, props) => <FeedCreatedRow field={field} props={props} />}
+            </Field>
+            <Field name="feedSelfUrl">
+              {(field, props) => <FeedSelfUrlRow field={field} props={props} />}
             </Field>
           </div>
           <Title title="記事の一覧">
@@ -214,15 +214,16 @@ export default component$(() => {
                 insert(feedForm, "entry", {
                   value: {
                     key: Math.floor(Math.random() * 360).toString(),
+                    url: "",
                     title: "",
+                    summary: "",
+                    authorName: getValue(feedForm, "feedAuthor") ?? "",
                     created: `${
                       new Date().toISOString().split("T", 1)[0]
                     }T00:00:00Z`,
                     updated: new Date().toISOString(),
-                    url: "",
-                    authorName: getValue(feedForm, "feedAuthor") ?? "",
-                    summary: "",
                   },
+                  at: 0,
                 });
               }}
             >
@@ -245,115 +246,100 @@ export default component$(() => {
                     ボタンを押してフィードを充実させましょう。
                   </div>
                 ) : (
-                  fieldArray.items
-                    .map((key, i) => [key, i])
-                    .reverse()
-                    .map(([key, i]) => {
-                      return (
-                        <div
-                          key={key}
-                          class="pb-4 bg-white shadow-md rounded-md"
-                        >
-                          <Field name={`entry.${i}.key`}>
+                  fieldArray.items.map((key, i) => {
+                    return (
+                      <div key={key} class="pb-4 bg-white shadow-md rounded-md">
+                        <Field name={`entry.${i}.key`}>
+                          {(field, props) => (
+                            <>
+                              <input
+                                {...props}
+                                type="hidden"
+                                value={field.value}
+                              />
+                              <div
+                                style={`background: hsl(${field.value}, 75%, 75%);`}
+                                class="rounded-t p-2 mb-4"
+                              ></div>
+                            </>
+                          )}
+                        </Field>
+                        <div class="px-4 grid grid-cols-[auto,1fr] gap-x-2">
+                          <Field name={`entry.${i}.url`}>
                             {(field, props) => (
-                              <>
-                                <input
-                                  {...props}
-                                  type="hidden"
-                                  value={field.value}
-                                />
-                                <div
-                                  style={`background: hsl(${field.value}, 75%, 75%);`}
-                                  class="rounded-t p-2 mb-4"
-                                ></div>
-                              </>
+                              <FeedEntryUrlRow field={field} props={props} />
                             )}
                           </Field>
-                          <div class="px-4 grid grid-cols-[auto,1fr] gap-x-2">
-                            <Field name={`entry.${i}.url`}>
-                              {(field, props) => (
-                                <FeedEntryUrlRow field={field} props={props} />
-                              )}
-                            </Field>
-                            <Field name={`entry.${i}.title`}>
-                              {(field, props) => (
-                                <FeedEntryTitleRow
-                                  form={feedForm}
-                                  field={field}
-                                  props={props}
-                                  entryUrl={getValue(
+                          <Field name={`entry.${i}.title`}>
+                            {(field, props) => (
+                              <FeedEntryTitleRow
+                                form={feedForm}
+                                field={field}
+                                props={props}
+                                entryUrl={getValue(feedForm, `entry.${i}.url`)}
+                              />
+                            )}
+                          </Field>
+                          <Field name={`entry.${i}.summary`}>
+                            {(field, props) => (
+                              <FeedEntrySummaryRow
+                                form={feedForm}
+                                field={field}
+                                props={props}
+                                entryUrl={getValue(feedForm, `entry.${i}.url`)}
+                              />
+                            )}
+                          </Field>
+                          <Field name={`entry.${i}.authorName`}>
+                            {(field, props) => (
+                              <FeedEntryAuthorRow field={field} props={props} />
+                            )}
+                          </Field>
+                          <Field name={`entry.${i}.created`}>
+                            {(field, props) => (
+                              <FeedEntryCreatedRow
+                                field={field}
+                                setValue={$((value?: string) =>
+                                  setValue(
                                     feedForm,
-                                    `entry.${i}.url`
-                                  )}
-                                />
-                              )}
-                            </Field>
-                            <Field name={`entry.${i}.created`}>
-                              {(field, props) => (
-                                <FeedEntryCreatedRow
-                                  field={field}
-                                  setValue={$((value?: string) =>
-                                    setValue(
-                                      feedForm,
-                                      `entry.${i}.created`,
-                                      value ?? ""
-                                    )
-                                  )}
-                                  props={props}
-                                />
-                              )}
-                            </Field>
-                            <Field name={`entry.${i}.updated`}>
-                              {(field, props) => (
-                                <FeedEntryUpdatedRow
-                                  field={field}
-                                  setValue={$((value?: string) =>
-                                    setValue(
-                                      feedForm,
-                                      `entry.${i}.updated`,
-                                      value ?? ""
-                                    )
-                                  )}
-                                  props={props}
-                                />
-                              )}
-                            </Field>
-                            <Field name={`entry.${i}.authorName`}>
-                              {(field, props) => (
-                                <FeedEntryAuthorRow
-                                  field={field}
-                                  props={props}
-                                />
-                              )}
-                            </Field>
-                            <Field name={`entry.${i}.summary`}>
-                              {(field, props) => (
-                                <FeedEntrySummaryRow
-                                  form={feedForm}
-                                  field={field}
-                                  props={props}
-                                  entryUrl={getValue(
+                                    `entry.${i}.created`,
+                                    value ?? ""
+                                  )
+                                )}
+                                props={props}
+                              />
+                            )}
+                          </Field>
+                          <Field name={`entry.${i}.updated`}>
+                            {(field, props) => (
+                              <FeedEntryUpdatedRow
+                                field={field}
+                                setValue={$((value?: string) =>
+                                  setValue(
                                     feedForm,
-                                    `entry.${i}.url`
-                                  )}
-                                />
-                              )}
-                            </Field>
-                          </div>
-                          <div class="flex justify-end px-4">
-                            <button
-                              class="flex-shrink-0 flex items-center border border-primary hover:border-primary-hover justify-center text-primary hover:text-primary-hover w-9 h-9 rounded-full"
-                              type="button"
-                              onClick$={() => {
-                                remove(feedForm, "entry", { at: i });
-                              }}
-                            >
-                              <HiTrashOutline class="h-5 w-5" />
-                            </button>
-                          </div>
+                                    `entry.${i}.updated`,
+                                    value ?? ""
+                                  )
+                                )}
+                                props={props}
+                              />
+                            )}
+                          </Field>
                         </div>
-                      );
-                    })
+                        <div class="flex justify-end px-4">
+                          <button
+                            class="flex-shrink-0 flex items-center border border-primary hover:border-primary-hover justify-center text-primary hover:text-primary-hover w-9 h-9 rounded-full"
+                            type="button"
+                            onClick$={() => {
+                              remove(feedForm, "entry", { at: i });
+                            }}
+                          >
+                            <HiTrashOutline class="h-5 w-5" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
                 )}
               </>
             )}
