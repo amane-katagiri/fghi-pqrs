@@ -8,14 +8,9 @@ import {
   useTask$,
 } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { routeLoader$ } from "@builder.io/qwik-city";
 
 import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
-
-export const useServerVersion = routeLoader$(() => {
-  return import.meta.env.PUBLIC_APP_VERSION;
-});
 
 export const NotifierContext =
   createContextId<Signal<string[]>>("notifier-context");
