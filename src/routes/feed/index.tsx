@@ -360,7 +360,7 @@ export default component$(() => {
           </FieldArray>
         </Form>
       </div>
-      <div class="fixed z-10 bottom-4 right-4">
+      <div class="fixed bottom-4 right-4">
         {!feedOpened.value ? (
           <button
             class={`flex items-center justify-center rounded-full w-16 h-16 text-white bg-primary hover:bg-primary-hover${

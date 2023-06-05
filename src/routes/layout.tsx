@@ -57,7 +57,10 @@ export default component$(() => {
       </main>
       <Footer />
       {notifyQueue.value[0] && (
-        <div class="w-full fixed flex justify-center px-2 py-4 bottom-0 text-white bg-error animate-slide-in-right">
+        <div
+          class="w-full fixed flex justify-center px-2 py-4 bottom-0 text-white bg-error animate-slide-in-right"
+          onClick$={() => (notifyQueue.value = notifyQueue.value.slice(1))}
+        >
           {notifyQueue.value[0]}
         </div>
       )}
