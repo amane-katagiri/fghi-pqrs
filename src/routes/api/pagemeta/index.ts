@@ -41,11 +41,12 @@ const searchTag = (
             (includeAttrs ?? []).every(([k, v]) => item[`@_${k}`] === v)
         )[0];
         if (result != null) {
-          return typeof result === "string" || extractAttr == null
+          return typeof result === "string"
             ? result
-            : (Object.entries(result).filter(
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                ([k, _]) => k === `@_${extractAttr}`
+            : (Object.entries(result).filter<[string, string]>(
+                (value): value is [string, string] =>
+                  value[0] === (extractAttr ? `@_${extractAttr}` : `#text`) &&
+                  typeof value[1] === "string"
               )[0] ?? [null, null])[1];
         }
       }
