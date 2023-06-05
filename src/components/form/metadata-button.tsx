@@ -60,6 +60,7 @@ export default component$<{
           setValue(json[meta]?.value ?? String(field.value ?? ""));
         } catch (e) {
           alert(String(e));
+          setValue(String(field.value ?? ""));
         } finally {
           isLoading.value = false;
         }
