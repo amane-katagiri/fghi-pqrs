@@ -67,6 +67,7 @@ export const buildFeedXml = (params: FeedCreateRequestBody): string => {
       { id: feedId },
       { updated: new Date().toISOString() },
       { author: [{ name: params.feedAuthor }] },
+      { generator: `${import.meta.env.PUBLIC_APP_TITLE} ${import.meta.env.PUBLIC_APP_VERSION}` },
       ...entries,
     ],
   })}`.slice("<feed>".length)}`;
