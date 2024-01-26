@@ -33,7 +33,7 @@ dependencies:
 devDependencies:
   '@builder.io/qwik':
     specifier: ^1.1.4
-    version: 1.1.4(undici@5.22.1)
+    version: 1.1.4(undici@5.26.2)
   '@builder.io/qwik-city':
     specifier: ^1.1.4
     version: 1.1.4
@@ -74,8 +74,8 @@ devDependencies:
     specifier: 5.0.4
     version: 5.0.4
   undici:
-    specifier: 5.22.1
-    version: 5.22.1
+    specifier: 5.26.2
+    version: 5.26.2
   vite:
     specifier: 4.5.2
     version: 4.5.2(@types/node@20.2.5)
@@ -110,14 +110,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@builder.io/qwik@1.1.4(undici@5.22.1):
+  /@builder.io/qwik@1.1.4(undici@5.26.2):
     resolution: {integrity: sha512-FSbe2GcUBptAXMAHfN+oGUpnb3nZXzup2EYlza61bAfgWSx9SryOwNULyROis3mu7Ywdua3w6VKvCWOFdovz2w==}
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
     hasBin: true
     peerDependencies:
       undici: ^5.14.0
     dependencies:
-      undici: 5.22.1
+      undici: 5.26.2
 
   /@cloudflare/kv-asset-handler@0.2.0:
     resolution: {integrity: sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==}
@@ -934,6 +934,10 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
+  /@fastify/busboy@2.1.0:
+    resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
+    engines: {node: '>=14'}
+
   /@humanwhocodes/config-array@0.11.13:
     resolution: {integrity: sha512-JSBDMiDKSzQVngfRjOdFXgFfklaXI4K9nLF49Auh21lmBWRLIK3+xTErTWD4KU54pb6coM6ESE7Awz/FNU3zgQ==}
     engines: {node: '>=10.10.0'}
@@ -1378,7 +1382,7 @@ packages:
       '@builder.io/qwik': ^1.1.0
       '@builder.io/qwik-city': ^1.1.0
     dependencies:
-      '@builder.io/qwik': 1.1.4(undici@5.22.1)
+      '@builder.io/qwik': 1.1.4(undici@5.26.2)
       '@builder.io/qwik-city': 1.1.4
     dev: false
 
@@ -1409,7 +1413,7 @@ packages:
     peerDependencies:
       '@builder.io/qwik': '>=1.0.0'
     dependencies:
-      '@builder.io/qwik': 1.1.4(undici@5.22.1)
+      '@builder.io/qwik': 1.1.4(undici@5.26.2)
       simple-icons: 8.15.0
       tsm: 2.3.0
     dev: false
@@ -1804,6 +1808,7 @@ packages:
     engines: {node: '>=10.16.0'}
     dependencies:
       streamsearch: 1.1.0
+    dev: true
 
   /call-bind@1.0.2:
     resolution: {integrity: sha512-7O+FbCihrB5WGbFYesctwmTKae6rOiIzmz1icreWJ+0aA7LJfuqhEso2T9ncpcFtzMQtzXf2QGGueWJGTYsqrA==}
@@ -4606,6 +4611,7 @@ packages:
   /streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
     engines: {node: '>=10.0.0'}
+    dev: true
 
   /string.prototype.trim@1.2.7:
     resolution: {integrity: sha512-p6TmeT1T3411M8Cgg9wBTMRtY2q9+PNy9EV1i2lIXUN/btt763oIfxwN3RR8VU6wHX8j/1CFy0L+YuThm6bgOg==}
@@ -4898,11 +4904,11 @@ packages:
       busboy: 1.6.0
     dev: true
 
-  /undici@5.22.1:
-    resolution: {integrity: sha512-Ji2IJhFXZY0x/0tVBXeQwgPlLWw13GVzpsWPQ3rV50IFMMof2I55PZZxtm4P6iNq+L5znYN9nSTAq0ZyE6lSJw==}
+  /undici@5.26.2:
+    resolution: {integrity: sha512-a4PDLQgLTPHVzOK+x3F79/M4GtyYPl+aX9AAK7aQxpwxDwCqkeZCScy7Gk5kWT3JtdFq1uhO3uZJdLtHI4dK9A==}
     engines: {node: '>=14.0'}
     dependencies:
-      busboy: 1.6.0
+      '@fastify/busboy': 2.1.0
 
   /unified@10.1.2:
     resolution: {integrity: sha512-pUSWAi/RAnVy1Pif2kAoeWNBa3JVrx0MId2LASj8G+7AiHWoKZNTomq6LG326T68U7/e263X6fTdcXIy7XnF7Q==}
