@@ -46,7 +46,7 @@
     "@img/sharp-linux-x64": "^0.33.1",
     "@modular-forms/qwik": "^0.16.0",
     "@qwikest/icons": "^0.0.8",
-    "fast-xml-parser": "^4.2.2",
+    "fast-xml-parser": "^4.2.5",
     "optional": "^0.1.4",
     "sharp": "^0.33.1",
     "ts-pattern": "^4.3.0",
