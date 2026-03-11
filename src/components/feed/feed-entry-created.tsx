@@ -1,3 +1,4 @@
+import type { QRL } from "@builder.io/qwik";
 import { component$ } from "@builder.io/qwik";
 import type { FieldElementProps, FieldStore } from "@modular-forms/qwik";
 import type { FeedCreateRequestBody } from "~/schema/feed-create";
@@ -6,7 +7,7 @@ import ItemRow from "./item-row";
 
 export default component$<{
   field: FieldStore<FeedCreateRequestBody, `entry.${number}.created`>;
-  setValue: (value?: string) => void;
+  setValue: QRL<(value?: string) => void>;
   props: FieldElementProps<FeedCreateRequestBody, `entry.${number}.created`>;
 }>(({ field, setValue, props }) => {
   return (

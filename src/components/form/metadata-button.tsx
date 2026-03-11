@@ -1,3 +1,4 @@
+import type { QRL} from "@builder.io/qwik";
 import { component$, useContext, useSignal } from "@builder.io/qwik";
 import type { FieldStore } from "@modular-forms/qwik";
 import { HiArrowDownTraySolid } from "@qwikest/icons/heroicons";
@@ -28,7 +29,7 @@ export default component$<{
   meta: "title" | "summary";
   field: Field;
   url?: string;
-  setValue: (value?: string) => void;
+  setValue: QRL<(value?: string) => void>;
 }>(({ meta, field, url, setValue }) => {
   const isLoading = useSignal<boolean>(false);
   const notifyQueue = useContext(NotifierContext);
